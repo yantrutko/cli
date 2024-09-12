@@ -63,6 +63,12 @@ int main ()
     }
     count = index;
     index = 0;
+    while (index <= 19)
+    {
+      guess[index] = 0;
+      index = index + 1;
+    }
+    index = 0;
     while (count)
     {
       guess[index] = '*';
@@ -71,7 +77,7 @@ int main ()
     }
     while (go != 'w' && game == 'y')
     {
-      printf ("\n\n%s\n", guess);
+      printf ("\n%s\n", guess);
       scanf ("%c", &input);
       do
       {
@@ -109,8 +115,8 @@ int main ()
         }
       } /*if (game == 'y')*/
     } /*while (go != 'w' && game == 'y')*/
-    printf ("\n%s\n", guess);
-  }
+  } /*while (game == 'y')*/
+  putc ('\n', stdout);
   fclose (words);
   return 0;
 }

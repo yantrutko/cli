@@ -2,3 +2,6 @@ include
 while
 double
 integer
+return
+char
+else
