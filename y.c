@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 int main ()
 {
@@ -8,65 +9,108 @@ int main ()
   int char_pointer = 0;
   int index = 0;
   int count = 0;
-  char go = 'y';
+  clock_t random = 0;
+  fpos_t file_start;
+  fpos_t position;
+  char go = 'n';
+  char game = 'y';
   FILE* words;
   words = fopen ("./words.txt", "r");
-  do
+  fgetpos (words, &file_start);
+  printf ("\nWord guessing game.\nEnter letter one by one.\nFor exit enter 0 (zero).\n");
+  while (game == 'y')
   {
-    char_pointer = fgetc (words);
-    if (char_pointer == '\n')
+    random = clock ();
+    while (random > 10)
     {
+      random = random % 10;
+    }
+    while (random > -1)
+    {
+      index = 0;
+      while (index <= 19)
+      {
+        word[index] = 0;
+        index = index + 1;
+      }
+      index = 0;
       go = 'n';
+      while (go == 'n')
+      {
+        char_pointer = fgetc (words);
+        if (char_pointer == '\n')
+        {
+          go = 'y';
+          count = count + 1;
+        }
+        if (go == 'n' && index <= 19)
+        {
+          word[index] = char_pointer;
+          index = index + 1;
+        }
+      }
+      fgetpos (words, &position);
+      char_pointer = fgetc (words);
+      if (feof (words))
+      {
+        fsetpos (words, &file_start);
+      }
+      else
+      {
+        fsetpos (words, &position);
+      }
+      random = random - 1;
     }
-    word[index] = char_pointer;
-    if (go == 'y')
+    count = index;
+    index = 0;
+    while (count)
     {
+      guess[index] = '*';
       index = index + 1;
+      count = count - 1;
     }
-  }
-  while (go == 'y');
-  count = index;
-  index = 0;
-  while (count)
-  {
-    guess[index] = '*';
-    index = index + 1;
-    count = count - 1;
-  }
-  while (go != 'w')
-  {
+    while (go != 'w' && game == 'y')
+    {
+      printf ("\n\n%s\n", guess);
+      scanf ("%c", &input);
+      do
+      {
+        char_pointer = getchar ();
+      }
+      while (char_pointer != '\n');
+      if (input == '0')
+      {
+        game = 'n';
+      }
+      if (game == 'y')
+      {
+        index = 0;
+        while (word[index])
+        {
+          if (word[index] == input)
+          {
+            guess[index] = input;
+          }
+          index = index + 1;
+        }
+        index = 0;
+        count = 0;
+        while (guess[index])
+        {
+          if (guess[index] == '*')
+          {
+            count = 1;
+          }
+          index = index + 1;
+        }
+        if (!count)
+        {
+          go = 'w';
+        }
+      } /*if (game == 'y')*/
+    } /*while (go != 'w' && game == 'y')*/
     printf ("\n%s\n", guess);
-    scanf ("%c", &input);
-    do
-    {
-      char_pointer = getchar ();
-    }
-    while (char_pointer != '\n');
-    index = 0;
-    while (word[index])
-    {
-      if (word[index] == input)
-      {
-        guess[index] = input;
-      }
-      index = index + 1;
-    }
-    index = 0;
-    count = 0;
-    while (guess[index])
-    {
-      if (guess[index] == '*')
-      {
-        count = 1;
-      }
-      index = index + 1;
-    }
-    if (!count)
-    {
-      go = 'w';
-    }
   }
-  printf ("\n%s\n", guess);
   fclose (words);
   return 0;
 }

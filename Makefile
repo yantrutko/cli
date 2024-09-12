@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -std=c23
+CFLAGS=-Wall -Wextra -std=c11
 SOURCES=y.c
 
 target:
