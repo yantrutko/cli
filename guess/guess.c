@@ -15,7 +15,7 @@ int main ()
   char go = 'n';
   char game = 'y';
   FILE* words;
-  words = fopen ("./words.txt", "r");
+  words = fopen ("./guess.txt", "r");
   fgetpos (words, &file_start);
   printf ("\nWord guessing game.\nEnter letter one by one.\nFor exit enter 0 (zero).\n");
   while (game == 'y')
