@@ -1,0 +1,5 @@
+
+1 | C° -> F°
+2 | F° -> C°
+
+Enter the number from the list

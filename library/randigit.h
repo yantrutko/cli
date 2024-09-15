@@ -1,0 +1,1 @@
+long randigit (long);

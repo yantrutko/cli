@@ -1,0 +1,7 @@
+
+0 | Exit
+1 | Temperature
+2 | Length
+3 | Time
+
+Enter the number from the list

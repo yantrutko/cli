@@ -1,10 +1,11 @@
+#include "guess.h"
 #include <stdio.h>
 #include <time.h>
 
-int main ()
+void guess (void)
 {
   char word[20] = {0};
-  char guess[20] = {0};
+  char guess_word[20]= {0};
   char input = '\0';
   int char_pointer = 0;
   int index = 0;
@@ -15,7 +16,7 @@ int main ()
   char go = 'n';
   char game = 'y';
   FILE* words;
-  words = fopen ("./guess.txt", "r");
+  words = fopen ("./lines/words.txt", "r");
   fgetpos (words, &file_start);
   printf ("\nWord guessing game.\nEnter letter one by one.\nFor exit enter 0 (zero).\n");
   while (game == 'y')
@@ -38,7 +39,7 @@ int main ()
       while (go == 'n')
       {
         char_pointer = fgetc (words);
-        if (char_pointer == '\n')
+        if (char_pointer == ' ')
         {
           go = 'y';
           count = count + 1;
@@ -47,6 +48,10 @@ int main ()
         {
           word[index] = char_pointer;
           index = index + 1;
+        }
+        while (go == 'y' && char_pointer != '\n')
+        {
+          char_pointer = fgetc (words);
         }
       }
       fgetpos (words, &position);
@@ -65,19 +70,19 @@ int main ()
     index = 0;
     while (index <= 19)
     {
-      guess[index] = 0;
+      guess_word[index] = 0;
       index = index + 1;
     }
     index = 0;
     while (count)
     {
-      guess[index] = '*';
+      guess_word[index] = '*';
       index = index + 1;
       count = count - 1;
     }
     while (go != 'w' && game == 'y')
     {
-      printf ("\n%s\n", guess);
+      printf ("\n%s\n", guess_word);
       scanf ("%c", &input);
       do
       {
@@ -95,15 +100,15 @@ int main ()
         {
           if (word[index] == input)
           {
-            guess[index] = input;
+            guess_word[index] = input;
           }
           index = index + 1;
         }
         index = 0;
         count = 0;
-        while (guess[index])
+        while (guess_word[index])
         {
-          if (guess[index] == '*')
+          if (guess_word[index] == '*')
           {
             count = 1;
           }
@@ -118,5 +123,4 @@ int main ()
   } /*while (game == 'y')*/
   putc ('\n', stdout);
   fclose (words);
-  return 0;
 }
