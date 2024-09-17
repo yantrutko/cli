@@ -1,4 +1,5 @@
 #include "library/line.h"
+#include "library/file_print.h"
 #include "converter.h"
 #include "expenses.h"
 #include "words.h"
@@ -14,7 +15,6 @@ int main ()
 		EXIT, CONV, EXP, WORDS, GUESS, PCH, XO, SIZE = 999
 	};
 	char input[SIZE] = {0};
-	int character_pointer = 0;
 	int go = 0;
 	int menu = SIZE;
 	while (menu)
@@ -52,20 +52,15 @@ int main ()
 		}
 		else
 		{
-			FILE* file = fopen ("./lines/1.title.txt", "r");
-			while ((character_pointer = getc (file)) != EOF)
-			{
-				putc (character_pointer, stdout);
-			}
-			fclose (file);
 			do
 			{
-				printf ("\n0 | Exit\n1 | Unit Converter\n2 | Expenses\n3 | Words\n4 | Guess\n5 | Pch\n6 | XO (in development)\n\n:");
+				file_print ("./lines/1.title.txt");
+				printf ("\n:");
 				clear_line (input, SIZE);
 				scanf ("%s", input);
 				go = line_to_int (&menu, input);
 			}
-			while (!go || menu > PCH);
+			while (!go || menu > XO);
 		}
 	}
 	return 0;
