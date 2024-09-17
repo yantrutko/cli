@@ -1,6 +1,7 @@
 #include "converter.h"
 #include "library/line.h"
 #include "library/buffer.h"
+#include "library/file_print.h"
 #include <stdio.h>
 
 void converter (char* input,
@@ -16,95 +17,81 @@ void converter (char* input,
 	double digits_entered = 0.0;
 	double digits_output = 0.0;
 	int go = 0;
-	int c = 0;
 	int menu_conv = CONV;
 	while (menu_conv)
 	{
-	do
-	{
-		FILE* file = fopen ("./lines/2.list.txt", "r");
-		while ((c = fgetc (file)) != EOF)
-		{
-			putc (c, stdout);
-		}
-		fclose (file);
-		printf (":");
-		clear_line (input, SIZE);
-		empty_reading ();
-		scanf ("%s", input);
-		go = line_to_int (&list_choice, input);
-		if (list_choice < 0 || list_choice > 3)
-		{
-			go = 0;
-		}
-		else if (go && list_choice == EXIT)
-		{
-			menu_conv = EXIT;
-		}
-	}
-	while (!go);
-	if (menu_conv)
-	{
 		do
 		{
-			FILE* file = NULL;
-			if (list_choice == 1)
-			{
-				file = fopen ("./lines/3.temperature.txt", "r");
-			}
-			else if (list_choice == 2)
-			{
-				file = fopen ("./lines/4.length.txt", "r");
-			}
-			else if (list_choice == 3)
-			{
-				file = fopen ("./lines/5.time.txt", "r");
-			}
-			while ((c = fgetc (file)) != EOF)
-			{
-				putc (c, stdout);
-			}
-			fclose (file);
-			printf (":");
+			putc ('\n', stdout);
+			file_print ("./lines/2.list.txt");
+			printf ("\n:");
 			clear_line (input, SIZE);
 			empty_reading ();
 			scanf ("%s", input);
-			go = line_to_int (&choice, input);
-			if (go)
+			go = line_to_int (&list_choice, input);
+			if (list_choice < 0 || list_choice > 3)
 			{
-				choice = choice + list_choice * 100;
-				go = fitting_rooms (choice);
+				go = 0;
 			}
-			else if (go && choice == EXIT)
+			else if (go && list_choice == EXIT)
 			{
 				menu_conv = EXIT;
 			}
 		}
 		while (!go);
+		if (menu_conv)
+		{
+			do
+			{
+				putc ('\n', stdout);
+				if (list_choice == 1)
+				{
+					file_print ("./lines/3.temperature.txt");
+				}
+				else if (list_choice == 2)
+				{
+					file_print ("./lines/4.length.txt");
+				}
+				else if (list_choice == 3)
+				{
+					file_print ("./lines/5.time.txt");
+				}
+				printf ("\n:");
+				clear_line (input, SIZE);
+				empty_reading ();
+				scanf ("%s", input);
+				go = line_to_int (&choice, input);
+				if (go && choice != EXIT)
+				{
+					choice = choice + list_choice * 100;
+					go = fitting_rooms (choice);
+				}
+				else if (go && choice == EXIT)
+				{
+					menu_conv = EXIT;
+				}
+			}
+			while (!go);
 		}
 		if (menu_conv)
 		{
 			do
 			{
-				FILE* file = fopen ("./lines/6.digits.txt", "r");
-				while ((c = fgetc (file)) != EOF)
-				{
-					putc (c, stdout);
-				}
-				fclose (file);
-				printf (":");
+				putc ('\n', stdout);
+				file_print ("./lines/6.digits.txt");
+				printf ("\n:");
 				clear_line (input, SIZE);
 				empty_reading ();
 				scanf ("%s", input);
 				go = line_to_double (1, &digits_entered, input);
 			}
 			while (!go);
-			clear_line (input, SIZE);
 			digits_output = x_rooms (&choice, digits_entered);
 			FILE* rooms = fopen ("./lines/7.rooms.txt", "r");
 			go = 0;
 			do
 			{
+				clear_line (input, SIZE);
 				fgets (input, SIZE - 1, rooms);
 				if (input[0] - '0' == choice)
 				{
