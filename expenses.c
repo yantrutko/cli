@@ -1,6 +1,7 @@
 #include "expenses.h"
 #include "library/line.h"
 #include "library/buffer.h"
+#include "library/symbol.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,7 +9,7 @@ void expenses (char* input)
 {
 	enum controls
 	{
-		EXIT, PRINT, ADD, PERCENT, REMOVE, SIZE = 999
+		EXIT, PRINT, APPEND, PERCENT, REMOVE, SIZE = 999
 	};
 	char remove_input[SIZE] = {0};
 	double expenses = 0.0;
@@ -29,17 +30,77 @@ void expenses (char* input)
 			fclose (print);
 			exp_menu = SIZE;
 		}
-		else if (exp_menu == ADD)
+		else if (exp_menu == APPEND)
 		{
+			int index = 0;
+			int decimal = 0;
+			int input_size = 0;
 			FILE* append = fopen ("./lines/expenses.txt", "a");
 			printf ("\nformat: [digits/price] [description/name of]\n:");
 			clear_line (input, SIZE);
-			scanf ("%s", input);
+			empty_reading ();
+			scanf ("%998s", input);
 			line_to_double (2, &expenses, input);
 			fprintf (append, "%g", expenses);
-			while ((c_pointer = getchar ()) != '\n')
+			while (input[index] == ' ')
 			{
-				fputc (c_pointer, append);
+				index = index + 1;
+			}
+			if
+			(
+				(is_digit (input[index]))
+				||
+				((input[index] == '-' ||
+				input[index] == '+')
+					&&
+					(input[index + 1] == '.' ||
+					input[index + 1] == ','))
+				||
+				((input[index] == '-' ||
+				input[index] == '+')
+					&&
+					(is_digit (input[index + 1])))
+			)
+			{
+				index = index + 1;
+			}
+			go = 0;
+			while (input[index] && !go)
+			{
+				if
+				(
+					((input[index] == '.' ||
+					input[index] == ',') && !decimal)
+					||
+					(is_digit (input[index]))
+				)
+				{
+					index = index + 1;
+				}
+				else
+				{
+					go = 1;
+				}
+			}
+			if (input[index] && input[index] != ' ')
+			{
+				fputc (' ', append);
+			}
+			while (input[index])
+			{
+				fputc (input[index], append);
+				index = index + 1;
+			}
+			while (input[input_size])
+			{
+				input_size = input_size + 1;
+			}
+			if (input_size == 997)
+			{
+				while ((c_pointer = getchar ()) != '\n')
+				{
+					fputc (c_pointer, append);
+				}
 			}
 			fputc ('\n', append);
 			fclose (append);
@@ -47,15 +108,11 @@ void expenses (char* input)
 		}
 		else if (exp_menu == PERCENT)
 		{
-			do
-			{
-				expenses = 0.0;
-				percent = 0;
-				printf ("\nTo get 10 percent use format: [digits] [10%%]\n:");
-				scanf ("%lf %i", &expenses, &percent);
-				empty_reading ();
-			}
-			while (expenses == 0.0 || percent == 0);
+			expenses = 0.0;
+			percent = 0;
+			printf ("\nTo get 10 percent use format: [digits] [10%%]\n:");
+			empty_reading ();
+			scanf ("%lf %i", &expenses, &percent);
 			expenses = expenses * percent / 100;
 			printf ("\n%g\n", expenses);
 			exp_menu = SIZE;
@@ -73,6 +130,7 @@ void expenses (char* input)
 			FILE* for_remove = fopen ("./lines/expenses.txt", "r+");
 			printf ("\nEnter part of text from the line to remove \n:");
 			clear_line (input, SIZE);
+			empty_reading ();
 			scanf ("%s", input);
 			while (!coincedens && !(feof (for_remove)))
 			{
@@ -115,6 +173,7 @@ void expenses (char* input)
 					{
 						printf ("\n%s", remove_input);
 						printf ("\n1 | Next one\n2 | Delete\n:");
+						empty_reading ();
 						scanf ("%i", &is_remove);
 					}
 					if (is_remove == 2)
@@ -157,6 +216,7 @@ void expenses (char* input)
 			{
 				printf ("\n0 | Exit\n1 | Print expenses\n2 | Throw in\n3 | Percentage\n4 | Remove one\n\n:");
 				clear_line (input, SIZE);
+				empty_reading ();
 				scanf ("%s", input);
 				go = line_to_int (&exp_menu, input);
 			}
@@ -164,4 +224,5 @@ void expenses (char* input)
 		}
 	}
 	clear_line (input, SIZE);
+	empty_reading ();
 }

@@ -3,6 +3,7 @@
 #include "library/time_step.h"
 #include "library/line.h"
 #include "library/buffer.h"
+#include "library/file_print.h"
 #include <stdio.h>
 
 void words (char* input)
@@ -13,37 +14,45 @@ void words (char* input)
 	};
 	char word[SIZE] = {0};
 	double word_score = 0.0;
-	double time_one, time_two;
+	double time_one = 0.0;
+	double time_two = 0.0;
 	long step_word = 0;
 	int go = 0;
 	int play = SIZE;
 	int char_pointer = 0;
-	fpos_t position;
+	fpos_t position_start = 0;
+	fpos_t position = 0;
 	FILE* file = fopen ("./lines/words.txt", "r+");
+	fgetpos (file, &position_start);
 	while (play)
 	{
-		if (play == PLAY)
+		while (play == PLAY)
 		{
 			step_word = randigit (20);
 			while (step_word)
 			{
-				char_pointer = fgetc (file);
-				if (char_pointer == '\n')
+				do
 				{
-					step_word -= 1;
-					fgetpos (file, &position);
 					char_pointer = fgetc (file);
-					if (char_pointer == EOF)
+					if (feof (file))
 					{
-						rewind (file);
-						fgetpos (file, &position);
-					}
-					else
-					{
-						fsetpos (file, &position);
+						fsetpos (file, &position_start);
 					}
 				}
+				while (char_pointer != '\n');
+				step_word = step_word - 1;
 			}
+			fgetpos (file, &position);
+			char_pointer = fgetc (file);
+			if (feof (file))
+			{
+        fsetpos (file, &position_start);
+				fgetpos (file, &position);
+      }
+      else
+      {
+      	fsetpos (file, &position);
+      }
 			clear_line (word, SIZE);
 			fscanf (file, "%s%lf", word, &word_score);
 			printf ("\n %s\n:", word);
@@ -54,7 +63,11 @@ void words (char* input)
 			time_two = time_step_sec_ms ();
 			time_two -= time_one;
 			line_to_int (&play, input);
-			if (!play)
+			if (play < EXIT || play > SCORE)
+			{
+				play = PLAY;
+			}
+			if (play == EXIT)
 			{
 				play = SIZE;
 			}
@@ -71,21 +84,12 @@ void words (char* input)
 							char_pointer = fgetc (file);
 						}
 						while (char_pointer != ' ');
+						fpos_t pos;
+						fgetpos (file, &pos);
+						fsetpos (file, &pos);
 						fprintf (file, "%lf", time_two);
+						fsetpos (file, &position);
 						printf (" %lf sec.\n", time_two);
-						if ((char_pointer = fgetc (file)) == '\n')
-						{
-							fgetpos (file, &position);
-							if ((char_pointer = fgetc (file)) == EOF)
-							{
-								rewind (file);
-								fgetpos (file, &position);
-							}
-							else
-							{
-								fsetpos (file, &position);
-							}
-						}
 					}
 				}
 				else
@@ -94,15 +98,10 @@ void words (char* input)
 				}
 			}
 		}
-		else if (play == SCORE)
+		if (play == SCORE)
 		{
-			rewind (file);
 			printf ("\n");
-			while ((char_pointer = fgetc (file)) != EOF)
-			{
-				putc (char_pointer, stdout);
-			}
-			rewind (file);
+			file_print ("./lines/words.txt");
 			play = SIZE;
 		}
 		else if (play > SCORE)

@@ -55,7 +55,7 @@ int main ()
 			do
 			{
 				file_print ("./lines/1.title.txt");
-				printf ("\n:");
+				printf ("\n\n:");
 				clear_line (input, SIZE);
 				scanf ("%s", input);
 				go = line_to_int (&menu, input);
