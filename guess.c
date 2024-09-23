@@ -70,7 +70,7 @@ void guess (void)
 		}
 		while (go != 'w' && game == 'y')
 		{
-			printf ("\n%s\n", guess_word);
+			printf ("\n%s\n:", guess_word);
 			empty_reading ();
 			scanf ("%c", &input);
 			if (input == '0')

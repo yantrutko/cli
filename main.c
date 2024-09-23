@@ -1,5 +1,5 @@
-#include "library/line.h"
 #include "library/file_print.h"
+#include "library/line.h"
 #include "converter.h"
 #include "expenses.h"
 #include "words.h"
@@ -22,7 +22,9 @@ int main ()
 		clear_line (input, SIZE);
 		if (menu == CONV)
 		{
-			converter (input, &fitting_rooms, &x_rooms);
+			converter (input,
+								&fitting_rooms,
+								&x_rooms);
 			menu = SIZE;
 		}
 		else if (menu == EXP)
@@ -42,7 +44,8 @@ int main ()
 		}
 		else if (menu == PCH)
 		{
-			pch (&put_line, &busy_waiting);
+			pch (&put_line,
+					&busy_waiting);
 			menu = SIZE;
 		}
 		else if (menu == XO)
