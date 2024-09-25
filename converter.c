@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 void converter (char* input,
-								int fitting_rooms (int),
 								double x_rooms (int*, double))
 {
 	enum conv_enum
@@ -64,7 +63,6 @@ void converter (char* input,
 				if (go && choice != EXIT)
 				{
 					choice = choice + list_choice * 100;
-					go = fitting_rooms (choice);
 				}
 				else if (go && choice == EXIT)
 				{
@@ -111,24 +109,6 @@ void converter (char* input,
 	}
 	clear_line (input, SIZE);
 	empty_reading ();
-}
-
-int fitting_rooms (int room)
-{
-	if (room == 101 ||
-			room == 102 ||
-			room == 201 ||
-			room == 202 ||
-			room == 301 ||
-			room == 302 ||
-			room == 303)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
 }
 
 double x_rooms (int* choice, double digits_entered)

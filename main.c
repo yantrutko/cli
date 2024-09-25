@@ -23,7 +23,6 @@ int main ()
 		if (menu == CONV)
 		{
 			converter (input,
-								&fitting_rooms,
 								&x_rooms);
 			menu = SIZE;
 		}
