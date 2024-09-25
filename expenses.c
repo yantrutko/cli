@@ -1,6 +1,7 @@
 #include "expenses.h"
 #include "library/line.h"
 #include "library/buffer.h"
+#include "library/file_print.h"
 #include "library/symbol.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,13 +22,8 @@ void expenses (char* input)
 	{
 		if (exp_menu == PRINT)
 		{
-			FILE* print = fopen ("./lines/expenses.txt", "r+");
 			printf ("\n");
-			while ((c_pointer = fgetc (print)) != EOF)
-			{
-				putc (c_pointer, stdout);
-			}
-			fclose (print);
+			file_print ("./lines/expenses.txt");
 			exp_menu = SIZE;
 		}
 		else if (exp_menu == APPEND)
@@ -50,16 +46,29 @@ void expenses (char* input)
 			(
 				(is_digit (input[index]))
 				||
-				((input[index] == '-' ||
-				input[index] == '+')
+				(
+					(
+						input[index] == '-'
+						||
+						input[index] == '+'
+					)
 					&&
-					(input[index + 1] == '.' ||
-					input[index + 1] == ','))
+					(
+						input[index + 1] == '.'
+						||
+						input[index + 1] == ','
+					)
+				)
 				||
-				((input[index] == '-' ||
-				input[index] == '+')
+				(
+					(
+						input[index] == '-'
+						||
+						input[index] == '+'
+					)
 					&&
-					(is_digit (input[index + 1])))
+					(is_digit (input[index + 1]))
+				)
 			)
 			{
 				index = index + 1;
@@ -69,8 +78,15 @@ void expenses (char* input)
 			{
 				if
 				(
-					((input[index] == '.' ||
-					input[index] == ',') && !decimal)
+					(
+						!decimal
+						&&
+						(
+							input[index] == '.'
+							||
+							input[index] == ','
+						)
+					)
 					||
 					(is_digit (input[index]))
 				)
@@ -127,7 +143,9 @@ void expenses (char* input)
 			int e_index = 0;
 			fpos_t position;
 			fpos_t next_position;
+			fpos_t start_position;
 			FILE* for_remove = fopen ("./lines/expenses.txt", "r+");
+			fgetpos (for_remove, &start_position);
 			printf ("\nEnter part of text from the line to remove \n:");
 			clear_line (input, SIZE);
 			empty_reading ();
@@ -178,7 +196,7 @@ void expenses (char* input)
 					}
 					if (is_remove == 2)
 					{
-						rewind (for_remove);
+						fsetpos (for_remove, &start_position);
 						FILE* new_file = fopen ("./lines/new_expenses.txt", "w");
 						while (new_line > 1)
 						{
