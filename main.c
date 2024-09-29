@@ -22,8 +22,7 @@ int main ()
 		clear_line (input, SIZE);
 		if (menu == CONV)
 		{
-			converter (input,
-								&x_rooms);
+			converter (input);
 			menu = SIZE;
 		}
 		else if (menu == EXP)

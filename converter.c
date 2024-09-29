@@ -4,8 +4,7 @@
 #include "library/file_print.h"
 #include <stdio.h>
 
-void converter (char* input,
-								double x_rooms (int*, double))
+void converter (char* input)
 {
 	enum conv_enum
 	{
@@ -84,7 +83,41 @@ void converter (char* input,
 				go = line_to_double (1, &digits_entered, input);
 			}
 			while (!go);
-			digits_output = x_rooms (&choice, digits_entered);
+			if (choice == 101)
+			{
+				choice = 0;
+				digits_output = (digits_entered * 9 / 5) + 32;
+			}
+			else if (choice == 102)
+			{
+				choice = 1;
+				digits_output = (digits_entered - 32) * 5 / 9;
+			}
+			else if (choice == 201)
+			{
+				choice = 2;
+				digits_output = digits_entered / 2.54;
+			}
+			else if (choice == 202)
+			{
+				choice = 3;
+				digits_output = digits_entered * 2.54;
+			}
+			else if (choice == 301)
+			{
+				choice = 4;
+				digits_output = digits_entered * 60;
+			}
+			else if (choice == 302)
+			{
+				choice = 5;
+				digits_output = digits_entered * 60;
+			}
+			else if (choice == 303)
+			{
+				choice = 6;
+				digits_output = digits_entered * 60 * 60;
+			}
 			FILE* rooms = fopen ("./lines/7.rooms.txt", "r");
 			go = 0;
 			do
@@ -97,67 +130,16 @@ void converter (char* input,
 					printf (input, digits_entered, digits_output);
 					go = 1;
 				}
-				else if (feof (rooms))
-				{
-					go = 1;
-					printf ("\nno-room error\n");
-				}
 			}
-			while (!go);
+			while (!go && !(feof (rooms)));
 			fclose (rooms);
+			go = 0;
+			choice = 0;
+			list_choice = 0;
+			digits_entered = 0.0;
+			digits_output = 0.0;
 		}
 	}
 	clear_line (input, SIZE);
 	empty_reading ();
-}
-
-double x_rooms (int* choice, double digits_entered)
-{
-	double digits_output = digits_entered;
-	switch (*choice)
-	{
-		case 101:
-		{
-			*choice = 0;
-			digits_output = (digits_output * 9 / 5) + 32;
-			break;
-		}
-		case 102:
-		{
-			*choice = 1;
-			digits_output = (digits_output - 32) * 5 / 9;
-			break;
-		}
-		case 201:
-		{
-			*choice = 2;
-			digits_output = digits_output / 2.54;
-			break;
-		}
-		case 202:
-		{
-			*choice = 3;
-			digits_output = digits_output * 2.54;
-			break;
-		}
-		case 301:
-		{
-			*choice = 4;
-			digits_output = digits_output * 60;
-			break;
-		}
-		case 302:
-		{
-			*choice = 5;
-			digits_output = digits_output * 60;
-			break;
-		}
-		case 303:
-		{
-			*choice = 6;
-			digits_output = digits_output * 60 * 60;
-			break;
-		}
-	}
-	return digits_output;
 }

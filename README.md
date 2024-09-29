@@ -2,4 +2,4 @@
 
 # leave it unfinished like corps do
 
-# read github repos as books
+# read github repos like books

@@ -47,25 +47,13 @@ void expenses (char* input)
 				(is_digit (input[index]))
 				||
 				(
-					(
-						input[index] == '-'
-						||
-						input[index] == '+'
-					)
+					(input[index] == '-' || input[index] == '+')
 					&&
-					(
-						input[index + 1] == '.'
-						||
-						input[index + 1] == ','
-					)
+					(input[index + 1] == '.' || input[index + 1] == ',')
 				)
 				||
 				(
-					(
-						input[index] == '-'
-						||
-						input[index] == '+'
-					)
+					(input[index] == '-' || input[index] == '+')
 					&&
 					(is_digit (input[index + 1]))
 				)
@@ -81,11 +69,7 @@ void expenses (char* input)
 					(
 						!decimal
 						&&
-						(
-							input[index] == '.'
-							||
-							input[index] == ','
-						)
+						(input[index] == '.' || input[index] == ',')
 					)
 					||
 					(is_digit (input[index]))
