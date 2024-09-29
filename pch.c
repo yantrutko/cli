@@ -3,18 +3,22 @@
 #include "library/buffer.h"
 #include <stdio.h>
 
-void pch (void put_line (int),
-					void busy_waiting (int))
+void pch (void)
 {
 	enum pch_constants
 	{ EXIT, PLAY, SETTINGS, MENU };
 	int pch_menu = MENU;
 	int width = 10;
-	int position = 0;
 	int push_speed = 2;
+	int index = 0;
+	int position = 1;
+	int direction = 1;
 	long time_limit = 5;
 	long time_one = 0;
 	long time_two = 0;
+	double time_ms_one = 0.0;
+	double time_ms_two = 0.0;
+	double waiting_time = 0.0;
 	while (pch_menu)
 	{
 		if (pch_menu == SETTINGS)
@@ -44,29 +48,55 @@ void pch (void put_line (int),
 		}
 		if (pch_menu == PLAY)
 		{
+			position = 1;
 			time_one = time_step_sec ();
-			while (time_two < time_limit)
+			do
 			{
-				while (position < width
-							&&
-							time_two < time_limit)
+				if (push_speed == 1)
 				{
-					busy_waiting (push_speed);
-					put_line (position);
+					waiting_time = 0.2;
+				}
+				else if (push_speed == 2)
+				{
+					waiting_time = 0.02;
+				}
+				else if (push_speed == 3)
+				{
+					waiting_time = 0.005;
+				}
+				time_ms_one = time_step_sec_ms ();
+				do
+				{
+					time_ms_two = time_step_sec_ms ();
+				}
+				while (time_ms_two - time_ms_one < waiting_time);
+				putc ('\n', stdout);
+				index = position;
+				while (index > 0)
+				{
+					putc (' ', stdout);
+					index = index - 1;
+				}
+				putc ('O', stdout);
+				if (direction == 1)
+				{
 					position = position + 1;
-					time_two = time_step_sec () - time_one;
+					if (position > width - 1)
+					{
+						direction = -1;
+					}
 				}
-				while (position > 1
-							&&
-							time_two < time_limit)
+				else if (direction == -1)
 				{
-					busy_waiting (push_speed);
-					put_line (position);
 					position = position - 1;
-					time_two = time_step_sec () - time_one;
+					if (position < 2)
+					{
+						direction = 1;
+					}
 				}
+				time_two = time_step_sec () - time_one;
 			}
-			time_two = 0;
+			while (time_two < time_limit);
 			pch_menu = MENU;
 		}
 		if (pch_menu == MENU)
@@ -77,41 +107,4 @@ void pch (void put_line (int),
 		}
 	}
 	empty_reading ();
-}
-
-void busy_waiting (int push_speed)
-{
-	double time_ms_one = 0.0;
-	double time_ms_two = 0.0;
-	double waiting_time = 0.0;
-	if (push_speed == 1)
-	{
-		waiting_time = 0.2;
-	}
-	else if (push_speed == 2)
-	{
-		waiting_time = 0.02;
-	}
-	else if (push_speed == 3)
-	{
-		waiting_time = 0.005;
-	}
-	time_ms_one = time_step_sec_ms ();
-	do
-	{
-		time_ms_two = time_step_sec_ms ();
-	}
-	while (time_ms_two - time_ms_one
-				<
-				waiting_time);
-}
-
-void put_line (int position)
-{
-	putchar ('\n');
-	for (int gap = position; gap > 0; gap -= 1)
-	{
-		putchar (' ');
-	}
-	putchar ('O');
 }

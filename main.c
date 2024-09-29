@@ -42,8 +42,7 @@ int main ()
 		}
 		else if (menu == PCH)
 		{
-			pch (&put_line,
-					&busy_waiting);
+			pch ();
 			menu = SIZE;
 		}
 		else if (menu == XO)
