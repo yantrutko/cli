@@ -1,160 +1,169 @@
 #include "xo.h"
+#include "library/buffer.h"
+#include "library/line.h"
 #include "library/symbol.h"
 #include <stdio.h>
 
 void xo ()
 {
+	enum xo_enum
+	{
+		EXIT, PLAY, MENU
+	};
 	int grid_column = 0;
 	int grid_row = 0;
-	char input_column[3] = {0};
+	char field[101] = { 0 };
+	char input_column[5] = { 0 };
 	int input_row = 0;
-	do
-	{
-		input_grid (&grid_column, &grid_row);
-	}
-	while (!grid_column || !grid_row);
-
-	int field_size = grid_column * grid_row;
-	char positions[field_size + 1];
-	positions[field_size] = 0;
-	while (field_size)
-	{
-		field_size -= 1;
-		positions[field_size] = ' ';
-	}
-
-	print_grid (alphabetic_line,
-							upper_line,
-							chars_line,
-							x_line,
-							lower_line,
-							grid_column,
-							grid_row,
-							positions);
-
+	int field_size = 0;
+	int index = 0;
 	int go = 0;
-	do
+	int menu_xo = MENU;
+	while (menu_xo)
 	{
-		go = input_position (input_column, &input_row);
+		if (menu_xo == PLAY)
+		{
+			do
+			{
+				printf ("\nEnter two number from 1 to 10 for grid. Example with maximum [10 10]\n:");
+				empty_reading ();
+/*
+		clear both inputs,
+		put them to line_to_int,
+		if if
+*/
+				scanf ("%i %i", &grid_column, &grid_row);
+				if (grid_column == 0 && grid_row == 0)
+				{
+					go = 1;
+					menu_xo = EXIT;
+				}
+				else if (
+									(
+										grid_column < 1
+										||
+										grid_column > 10
+									)
+  								||
+  								(
+  									grid_row < 1
+  									||
+  									grid_row > 10
+  								)
+  							)
+				{
+					go = 0;
+				}
+				else
+				{
+					go = 1;
+				}
+			}
+			while (!go);
+			if (menu_xo == PLAY)
+			{
+				field_size = grid_column * grid_row;
+				while (index <= field_size - 1)
+				{
+					field[index] = '*';
+					index += 1;
+				}
+				int row = grid_row - 1;
+				int column = grid_column;
+				int index = 'A';
+				putc ('\n', stdout);
+				while (column)
+				{
+					printf ("   %c", index);
+					column -= 1;
+					index += 1;
+				}
+				printf ("\n ┌───");
+				column = grid_column - 1;
+				while (column)
+				{
+					printf ("┬───");
+					column -= 1;
+				}
+				printf ("┐");
+				int row_number = grid_row - row;
+				while (row > - 1)
+				{
+					index = (row_number - 1) * grid_column;
+					column = grid_column - 1;
+					printf ("\n │ %c", field[0]);
+					while (column)
+					{
+						index += 1;
+						printf (" │ %c", field[index]);
+						column -= 1;
+					}
+					printf (" │ %i", row_number);
+					if (row)
+					{
+						printf ("\n ├───");
+						column = grid_column - 1;
+						while (column)
+						{
+							printf ("┼───");
+							column -= 1;
+						}
+						printf ("┤");
+					}
+					row -= 1;
+					row_number += 1;
+				}
+				printf ("\n └───");
+				column = grid_column - 1;
+				while (column)
+				{
+					printf ("┴───");
+					column -= 1;
+				}
+				printf ("┘\n");
+				do
+				{
+					go = input_position (input_column,
+															&input_row);
+				}
+				while (!go);
+				menu_xo = MENU;
+			}
+		}
+		else if (menu_xo > PLAY)
+		{
+			go = 0;
+			empty_reading ();
+			clear_line (input_column, 5);
+			printf ("\n0 | Exit\n1 | Play\n\n:");
+			scanf ("%s", input_column);
+			go = line_to_int (&menu_xo, input_column);
+		}
 	}
-	while (!go);
+	empty_reading ();
 }
 
-void input_grid (int* grid_column, int* grid_row)
+int input_position (char* input_column,
+										int* input_row)
 {
-	printf ("\nEnter the number of vertical lines and the number of horizontal lines\n:");
-	scanf ("%i %i", grid_column, grid_row);
-}
-
-int input_position (char* input_column, int* input_row)
-{
-	printf ("Enter position. Example: 3k or s6.\n :");
+	printf ("Enter position, example: 3k or s6.\n:");
 	scanf ("%s", input_column);
-	if (is_digit (input_column[0]) && is_alphabetic(input_column[1]))
+	if (is_digit (input_column[0])
+			&&
+			is_alphabetic(input_column[1]))
 	{
 		*input_row = input_column[0];
 		input_column[0] = input_column[1];
 		input_column[1] = 0;
 		return 1;
 	}
-	else if (is_alphabetic (input_column[0]) && is_digit (input_column[1]))
+	else if (is_alphabetic (input_column[0])
+					&&
+					is_digit (input_column[1]))
 	{
 		*input_row = input_column[1];
 		input_column[1] = 0;
 		return 1;
 	}
 	return 0;
-}
-
-void print_grid (void (*alphabetic_line) (int),
-								void (*upper_line) (int),
-								void (*chars_line) (int, int, int, char*),
-								void (*x_line) (int),
-								void (*lower_line) (int),
-								int grid_column,
-								int grid_row,
-								char* positions)
-{
-	int row = grid_row;
-	int i = 0;
-	row -= 1;
-
-	alphabetic_line (grid_column);
-	upper_line (grid_column);
-	chars_line (grid_column, grid_row, row, positions);
-	while (row)
-	{
-		row -= 1;
-		i += grid_column;
-		x_line (grid_column);
-		chars_line (grid_column, grid_row, row, positions);
-	}
-	lower_line (grid_column);
-}
-
-void chars_line (int grid_column,
-								int grid_row,
-								int for_row,
-								char* positions)
-{
-	int row = grid_row - for_row;
-	int column = grid_column - 1;
-	int i = (row - 1) * grid_column;
-	printf ("\n │ %c", positions[0]);
-	while (column)
-	{
-		i += 1;
-		printf (" │ %c", positions[i]);
-		column -= 1;
-	}
-	printf (" │ %i", row);
-}
-
-void alphabetic_line (int grid_column)
-{
-	int column = grid_column - 1;
-	printf ("\n   A");
-	int abc = 'B';
-	while (column)
-	{
-		printf ("   %c", abc);
-		column -= 1;
-		abc += 1;
-	}
-}
-
-void upper_line (int grid_column)
-{
-	int column = grid_column - 1;
-	printf ("\n ┌───");
-	while (column)
-	{
-		printf ("┬───");
-		column -= 1;
-	}
-	printf ("┐");
-}
-
-void x_line (int grid_column)
-{
-	int column = grid_column - 1;
-	printf ("\n ├───");
-	while (column)
-	{
-		printf ("┼───");
-		column -= 1;
-	}
-	printf ("┤");
-}
-
-void lower_line (int grid_column)
-{
-	int column = grid_column - 1;
-	printf ("\n └───");
-	while (column)
-	{
-		printf ("┴───");
-		column -= 1;
-	}
-	printf ("┘\n");
 }
