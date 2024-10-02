@@ -1,7 +1,7 @@
 #include "guess.h"
-#include "library/randigit.h"
-#include "library/line.h"
-#include "library/buffer.h"
+#include "service/buffer.h"
+#include "service/line.h"
+#include "service/randigit.h"
 #include <stdio.h>
 #include <time.h>
 

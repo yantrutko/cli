@@ -1,7 +1,7 @@
 #include "xo.h"
-#include "library/buffer.h"
-#include "library/line.h"
-#include "library/symbol.h"
+#include "service/buffer.h"
+#include "service/line.h"
+#include "service/symbol.h"
 #include <stdio.h>
 
 void xo ()
@@ -27,11 +27,6 @@ void xo ()
 			{
 				printf ("\nEnter two number from 1 to 10 for grid. Example with maximum [10 10]\n:");
 				empty_reading ();
-/*
-		clear both inputs,
-		put them to line_to_int,
-		if if
-*/
 				scanf ("%i %i", &grid_column, &grid_row);
 				if (grid_column == 0 && grid_row == 0)
 				{

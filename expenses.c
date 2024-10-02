@@ -1,8 +1,8 @@
 #include "expenses.h"
-#include "library/line.h"
-#include "library/buffer.h"
-#include "library/file_print.h"
-#include "library/symbol.h"
+#include "service/buffer.h"
+#include "service/file_print.h"
+#include "service/line.h"
+#include "service/symbol.h"
 #include <stdio.h>
 #include <stdlib.h>
 

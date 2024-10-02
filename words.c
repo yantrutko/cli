@@ -1,9 +1,9 @@
 #include "words.h"
-#include "library/randigit.h"
-#include "library/time_step.h"
-#include "library/line.h"
-#include "library/buffer.h"
-#include "library/file_print.h"
+#include "service/buffer.h"
+#include "service/file_print.h"
+#include "service/line.h"
+#include "service/randigit.h"
+#include "service/time_step.h"
 #include <stdio.h>
 
 void words (char* input)

@@ -1,7 +1,7 @@
 #include "converter.h"
-#include "library/line.h"
-#include "library/buffer.h"
-#include "library/file_print.h"
+#include "service/buffer.h"
+#include "service/file_print.h"
+#include "service/line.h"
 #include <stdio.h>
 
 void converter (char* input)
