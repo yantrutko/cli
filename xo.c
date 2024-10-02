@@ -10,8 +10,11 @@ void xo ()
 	{
 		EXIT, PLAY, MENU
 	};
+	char alphabet[11] = { '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
 	int grid_column = 0;
 	int grid_row = 0;
+	int position_row = 0;
+	char position_column = 0;
 	char field[101] = { 0 };
 	char input_column[5] = { 0 };
 	int input_row = 0;
@@ -25,7 +28,7 @@ void xo ()
 		{
 			do
 			{
-				printf ("\nEnter two number from 1 to 10 for grid. Example with maximum [10 10]\n:");
+				printf ("\nEnter two number from 1 to 9 for grid. Example with maximum [9 9]\n:");
 				empty_reading ();
 				scanf ("%i %i", &grid_column, &grid_row);
 				if (grid_column == 0 && grid_row == 0)
@@ -37,13 +40,13 @@ void xo ()
 									(
 										grid_column < 1
 										||
-										grid_column > 10
+										grid_column > 9
 									)
   								||
   								(
   									grid_row < 1
   									||
-  									grid_row > 10
+  									grid_row > 9
   								)
   							)
 				{
@@ -118,8 +121,26 @@ void xo ()
 				printf ("┘\n");
 				do
 				{
-					go = input_position (input_column,
-															&input_row);
+					go = 0;
+					printf ("Enter position, example: 3k or s6.\n:");
+					scanf ("%s", input_column);
+					if (is_digit (input_column[0])
+							&&
+							is_alphabetic(input_column[1]))
+					{
+						input_row = input_column[0];
+						input_column[0] = input_column[1];
+						input_column[1] = 0;
+						go = 1;
+					}
+					else if (is_alphabetic (input_column[0])
+									&&
+									is_digit (input_column[1]))
+					{
+						input_row = input_column[1];
+						input_column[1] = 0;
+						go = 1;
+					}
 				}
 				while (!go);
 				menu_xo = MENU;
@@ -136,29 +157,4 @@ void xo ()
 		}
 	}
 	empty_reading ();
-}
-
-int input_position (char* input_column,
-										int* input_row)
-{
-	printf ("Enter position, example: 3k or s6.\n:");
-	scanf ("%s", input_column);
-	if (is_digit (input_column[0])
-			&&
-			is_alphabetic(input_column[1]))
-	{
-		*input_row = input_column[0];
-		input_column[0] = input_column[1];
-		input_column[1] = 0;
-		return 1;
-	}
-	else if (is_alphabetic (input_column[0])
-					&&
-					is_digit (input_column[1]))
-	{
-		*input_row = input_column[1];
-		input_column[1] = 0;
-		return 1;
-	}
-	return 0;
 }

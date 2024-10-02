@@ -7,8 +7,8 @@
 
 void guess (void)
 {
-	char word[20] = {0};
-	char guess_word[20]= {0};
+	char word[21] = { 0 };
+	char guess_word[21]= { 0 };
 	char input = '\0';
 	int char_pointer = 0;
 	int index = 0;

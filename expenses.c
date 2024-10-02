@@ -12,7 +12,7 @@ void expenses (char* input)
 	{
 		EXIT, PRINT, APPEND, PERCENT, REMOVE, SIZE = 999
 	};
-	char remove_input[SIZE] = {0};
+	char remove_input[SIZE + 1] = { 0 };
 	double expenses = 0.0;
 	int go = 0;
 	int percent = 0;
@@ -138,7 +138,7 @@ void expenses (char* input)
 			{
 				clear_line (remove_input, SIZE);
 				fgetpos (for_remove, &position);
-				fgets (remove_input, SIZE, for_remove);
+				fgets (remove_input, SIZE - 1, for_remove);
 				new_line += 1;
 				fgetpos (for_remove, &next_position);
 				exp_size = 0;

@@ -12,7 +12,7 @@ void words (char* input)
 	{
 		EXIT, PLAY, SCORE, SIZE = 999
 	};
-	char word[SIZE] = {0};
+	char word[SIZE + 1] = { 0 };
 	double word_score = 0.0;
 	double time_one = 0.0;
 	double time_two = 0.0;

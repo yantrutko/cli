@@ -14,7 +14,7 @@ int main ()
 	{
 		EXIT, CONV, EXP, WORDS, GUESS, PCH, XO, SIZE = 999
 	};
-	char input[SIZE] = {0};
+	char input[SIZE + 1] = { 0 };
 	int go = 0;
 	int menu = SIZE;
 	while (menu)

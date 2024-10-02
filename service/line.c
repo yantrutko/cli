@@ -3,7 +3,7 @@
 
 void clear_line (char* line, int size)
 {
-	for (int index = 0; index < size; index += 1)
+	for (int index = 0; index <= size; index += 1)
 	{
 		line[index] = 0;
 	}
@@ -11,7 +11,7 @@ void clear_line (char* line, int size)
 
 int is_lines_equal (char* line_one, char* line_two, int size)
 {
-	for (int index = 0; index < size; index += 1)
+	for (int index = 0; index <= size && line_one[index]; index += 1)
 	{
 		if ((line_one[index] || line_two[index]) &&
 				(line_one[index] != line_two[index]))
