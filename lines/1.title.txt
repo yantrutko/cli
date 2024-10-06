@@ -9,4 +9,4 @@
 3 | Words
 4 | Guess
 5 | Pch
-6 | XO (in development)
+6 | XO

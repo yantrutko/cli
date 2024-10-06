@@ -47,7 +47,7 @@ int main ()
 		}
 		else if (menu == XO)
 		{
-			xo ();
+			xo (input);
 			menu = SIZE;
 		}
 		else

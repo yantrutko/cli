@@ -4,156 +4,231 @@
 #include "service/symbol.h"
 #include <stdio.h>
 
-void xo ()
+void xo (char* input)
 {
 	enum xo_enum
 	{
-		EXIT, PLAY, MENU
+		EXIT, PLAY, SIZE = 999
 	};
 	char alphabet[11] = { '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
 	int grid_column = 0;
 	int grid_row = 0;
-	int position_row = 0;
-	char position_column = 0;
-	char field[101] = { 0 };
-	char input_column[5] = { 0 };
-	int input_row = 0;
+	int column = 0;
+	int row = 0;
 	int field_size = 0;
+	char field[82] = { 0 };
+	int position_index = 0;
+	char input_column[5] = { 0 };
 	int index = 0;
+	char turn = 'X';
 	int go = 0;
-	int menu_xo = MENU;
+	int menu_xo = SIZE;
 	while (menu_xo)
 	{
 		if (menu_xo == PLAY)
 		{
-			do
+			go = 0;
+			while (!go && menu_xo == PLAY)
 			{
-				printf ("\nEnter two number from 1 to 9 for grid. Example with maximum [9 9]\n:");
+				printf ("\nEnter two number from 1 to 9 to set the grid.\nExample with maximum [9 9]\nOr enter 0 0 (zero zero) for exit\n:");
 				empty_reading ();
-				scanf ("%i %i", &grid_column, &grid_row);
-				if (grid_column == 0 && grid_row == 0)
+				clear_line (input, SIZE);
+				clear_line (input_column, 4);
+				scanf ("%s%s", input, input_column);
+				if (input[0] == '0'
+						&&
+						!input[1]
+						&&
+						input_column[0] == '0'
+						&&
+						!input_column[1])
 				{
-					go = 1;
-					menu_xo = EXIT;
-				}
-				else if (
-									(
-										grid_column < 1
-										||
-										grid_column > 9
-									)
-  								||
-  								(
-  									grid_row < 1
-  									||
-  									grid_row > 9
-  								)
-  							)
-				{
-					go = 0;
+					menu_xo = SIZE;
 				}
 				else
 				{
-					go = 1;
+					go = line_to_int (&grid_row, input);
+					if (go)
+					{
+						go = line_to_int (&grid_column, input_column);
+						if ((grid_row < 1 || grid_row > 9)
+								||
+								(grid_column < 1 || grid_column > 9))
+						{
+							go = 0;
+						}
+					}
 				}
 			}
-			while (!go);
 			if (menu_xo == PLAY)
 			{
 				field_size = grid_column * grid_row;
-				while (index <= field_size - 1)
+				index = 0;
+				while (index < field_size)
 				{
-					field[index] = '*';
-					index += 1;
+					field[index] = ' ';
+					index ++;
 				}
-				int row = grid_row - 1;
-				int column = grid_column;
-				int index = 'A';
+				printf ("\nX turn X:\n");
+			}
+			while (menu_xo == PLAY)
+			{
+				column = 1;
+				index = 'A';
 				putc ('\n', stdout);
-				while (column)
+				while (column <= grid_column)
 				{
 					printf ("   %c", index);
-					column -= 1;
-					index += 1;
+					column ++;
+					index ++;
 				}
+				column = 2;
 				printf ("\n ┌───");
-				column = grid_column - 1;
-				while (column)
+				while (column <= grid_column)
 				{
 					printf ("┬───");
-					column -= 1;
+					column ++;
 				}
 				printf ("┐");
-				int row_number = grid_row - row;
-				while (row > - 1)
+				row = 0;
+				while (row <= grid_row - 1)
 				{
-					index = (row_number - 1) * grid_column;
-					column = grid_column - 1;
-					printf ("\n │ %c", field[0]);
-					while (column)
+					index = row * grid_column;
+					column = 1;
+					putc ('\n', stdout);
+					while (column <= grid_column)
 					{
-						index += 1;
 						printf (" │ %c", field[index]);
-						column -= 1;
+						index ++;
+						column ++;
 					}
-					printf (" │ %i", row_number);
-					if (row)
+					printf (" │ %i", row + 1);
+					if (row <= grid_row - 2)
 					{
+						column = 2;
 						printf ("\n ├───");
-						column = grid_column - 1;
-						while (column)
+						while (column <= grid_column)
 						{
 							printf ("┼───");
-							column -= 1;
+							column ++;
 						}
 						printf ("┤");
 					}
-					row -= 1;
-					row_number += 1;
+					row ++;
 				}
+				column = 2;
 				printf ("\n └───");
-				column = grid_column - 1;
-				while (column)
+				while (column <= grid_column)
 				{
 					printf ("┴───");
-					column -= 1;
+					column ++;
 				}
 				printf ("┘\n");
-				do
+				go = 0;
+				while (!go)
 				{
 					go = 0;
-					printf ("Enter position, example: 3k or s6.\n:");
-					scanf ("%s", input_column);
-					if (is_digit (input_column[0])
-							&&
-							is_alphabetic(input_column[1]))
+					printf ("Enter position, example: 3k or s6.\nOr 0 (zero) for exit\n:");
+					empty_reading ();
+					clear_line (input, SIZE);
+					scanf ("%s", input);
+					if (input[0] == '0' && !input[1])
 					{
-						input_row = input_column[0];
-						input_column[0] = input_column[1];
-						input_column[1] = 0;
-						go = 1;
+						printf ("Confirm exit with 0 or enter position\n:");
+						empty_reading ();
+						clear_line (input, SIZE);
+						scanf ("%s", input);
+						if (input[0] == '0' && !input[1])
+						{
+							go = 1;
+							menu_xo = SIZE;
+						}
 					}
-					else if (is_alphabetic (input_column[0])
-									&&
-									is_digit (input_column[1]))
+					if (menu_xo == PLAY
+							&&
+							is_digit (input[0])
+							&&
+							is_alphabetic (input[1]))
 					{
-						input_row = input_column[1];
-						input_column[1] = 0;
-						go = 1;
+						row = input[0] - '0';
+						index = 0;
+						column = 0;
+						while (alphabet[index])
+						{
+							if (input[1] == alphabet[index])
+							{
+								column = index;
+							}
+							index ++;
+						}
+						if ((row > 0 && row <= grid_row)
+								&&
+								column > 0)
+						{
+							go = 1;
+						}
+					}
+					else if (menu_xo == PLAY
+									&&
+									is_alphabetic (input[0])
+									&&
+									is_digit (input[1]))
+					{
+						row = input[1] - '0';
+            index = 0;
+            column = 0;
+            while (alphabet[index])
+            {
+              if (input[0] == alphabet[index])
+              {
+                column = index;
+              }
+              index ++;
+            }
+            if ((row > 0 && row <= grid_row)
+                &&
+                column > 0)
+            {
+              go = 1;
+            }
+					}
+					if (go && menu_xo == PLAY)
+					{
+						position_index = ((row - 1) * grid_column) + column - 1;
+						if (field[position_index] != ' ')
+						{
+							go = 0;
+						}
 					}
 				}
-				while (!go);
-				menu_xo = MENU;
+				if (menu_xo == PLAY)
+				{
+					if (turn == 'X')
+					{
+						field[position_index] = 'X';
+						turn = 'O';
+						printf ("\nO turn O:\n");
+					}
+					else if (turn == 'O')
+					{
+						field[position_index] = 'O';
+						turn = 'X';
+						printf ("\nX turn X:\n");
+					}
+				}
 			}
 		}
 		else if (menu_xo > PLAY)
 		{
-			go = 0;
-			empty_reading ();
-			clear_line (input_column, 5);
-			printf ("\n0 | Exit\n1 | Play\n\n:");
-			scanf ("%s", input_column);
-			go = line_to_int (&menu_xo, input_column);
+			do
+			{
+				empty_reading ();
+				clear_line (input, SIZE);
+				printf ("\n0 | Exit\n1 | Play\n\n:");
+				scanf ("%s", input);
+				go = line_to_int (&menu_xo, input);
+			}
+			while (!go || menu_xo > PLAY);
 		}
 	}
 	empty_reading ();

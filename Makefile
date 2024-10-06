@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wextra -std=c23
+CFLAGS = -Wall -Wextra -pedantic -std=c23
 
 SOURCES := $(shell find -name '*.c')
 

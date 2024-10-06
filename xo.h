@@ -1,1 +1,1 @@
-void xo ();
+void xo (char*);
