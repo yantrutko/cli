@@ -1,5 +1,0 @@
-1 | Hours to minutes
-2 | Minutes to seconds
-3 | Hours to seconds
-
-Enter the number from the list

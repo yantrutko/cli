@@ -54,8 +54,7 @@ int main ()
 		{
 			do
 			{
-				file_print ("./lines/1.title.txt");
-				printf ("\n\n:");
+				printf ("\n┌──────────┐\n│   DEMO   │\n└──────────┘\n\n0 | Exit\n1 | Unit Converter\n2 | Expenses\n3 | Words\n4 | Guess\n5 | Pch\n6 | XO\n\n:");
 				clear_line (input, SIZE);
 				scanf ("%s", input);
 				go = line_to_int (&menu, input);

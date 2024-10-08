@@ -22,7 +22,7 @@ void words (char* input)
 	int char_pointer = 0;
 	fpos_t position_start = 0;
 	fpos_t position = 0;
-	FILE* file = fopen ("./lines/words.txt", "r+");
+	FILE* file = fopen ("./demo-lines/words.txt", "r+");
 	fgetpos (file, &position_start);
 	while (play)
 	{
@@ -101,7 +101,7 @@ void words (char* input)
 		if (play == SCORE)
 		{
 			printf ("\n");
-			file_print ("./lines/words.txt");
+			file_print ("./demo-lines/words.txt");
 			play = SIZE;
 		}
 		else if (play > SCORE)

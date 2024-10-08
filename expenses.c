@@ -22,8 +22,8 @@ void expenses (char* input)
 	{
 		if (exp_menu == PRINT)
 		{
-			printf ("\n");
-			file_print ("./lines/expenses.txt");
+			putc ('\n', stdout);
+			file_print ("./demo-lines/expenses.txt");
 			exp_menu = SIZE;
 		}
 		else if (exp_menu == APPEND)
@@ -31,8 +31,8 @@ void expenses (char* input)
 			int index = 0;
 			int decimal = 0;
 			int input_size = 0;
-			FILE* append = fopen ("./lines/expenses.txt", "a");
-			printf ("\nformat: [digits/price] [description/name of]\n:");
+			FILE* append = fopen ("./demo-lines/expenses.txt", "a");
+			printf ("\nentering format example: 13.50 lunch\n:");
 			clear_line (input, SIZE);
 			empty_reading ();
 			scanf ("%998s", input);
@@ -128,9 +128,9 @@ void expenses (char* input)
 			fpos_t position;
 			fpos_t next_position;
 			fpos_t start_position;
-			FILE* for_remove = fopen ("./lines/expenses.txt", "r+");
+			FILE* for_remove = fopen ("./demo-lines/expenses.txt", "r+");
 			fgetpos (for_remove, &start_position);
-			printf ("\nEnter part of text from the line to remove \n:");
+			printf ("\nEnter some text from the selected line\n\n:");
 			clear_line (input, SIZE);
 			empty_reading ();
 			scanf ("%s", input);
@@ -181,7 +181,7 @@ void expenses (char* input)
 					if (is_remove == 2)
 					{
 						fsetpos (for_remove, &start_position);
-						FILE* new_file = fopen ("./lines/new_expenses.txt", "w");
+						FILE* new_file = fopen ("./demo-lines/new_expenses.txt", "w");
 						while (new_line > 1)
 						{
 							c_pointer = fgetc (for_remove);
@@ -207,8 +207,8 @@ void expenses (char* input)
 			fclose (for_remove);
 			if (is_remove == 2)
 			{
-				remove ("./lines/expenses.txt");
-				rename ("./lines/new_expenses.txt", "./lines/expenses.txt");
+				remove ("./demo-lines/expenses.txt");
+				rename ("./demo-lines/new_expenses.txt", "./demo-lines/expenses.txt");
 			}
 			exp_menu = SIZE;
 		}

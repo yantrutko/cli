@@ -20,9 +20,7 @@ void converter (char* input)
 	{
 		do
 		{
-			putc ('\n', stdout);
-			file_print ("./lines/2.list.txt");
-			printf ("\n:");
+			printf ("\n0 | Exit\n1 | Temperature\n2 | Length\n3 | Time\n\n:");
 			clear_line (input, SIZE);
 			empty_reading ();
 			scanf ("%s", input);
@@ -37,24 +35,22 @@ void converter (char* input)
 			}
 		}
 		while (!go);
-		if (menu_conv)
+		if (menu_conv == CONV)
 		{
 			do
 			{
-				putc ('\n', stdout);
 				if (list_choice == 1)
 				{
-					file_print ("./lines/3.temperature.txt");
+					printf ("\n0 | Exit\n1 | C° -> F°\n2 | F° -> C°\n\n:");
 				}
 				else if (list_choice == 2)
 				{
-					file_print ("./lines/4.length.txt");
+					printf ("\n0 | Exit\n1 | Centimeters to inches\n2 | Inches to centimeters\n\n:");
 				}
 				else if (list_choice == 3)
 				{
-					file_print ("./lines/5.time.txt");
+					printf ("\n0 | Exit\n1 | Hours to minutes\n2 | Minutes to seconds\n3 | Hours to seconds\n\n:");
 				}
-				printf ("\n:");
 				clear_line (input, SIZE);
 				empty_reading ();
 				scanf ("%s", input);
@@ -65,18 +61,16 @@ void converter (char* input)
 				}
 				else if (go && choice == EXIT)
 				{
-					menu_conv = EXIT;
+					menu_conv = SIZE;
 				}
 			}
 			while (!go);
 		}
-		if (menu_conv)
+		if (menu_conv == CONV)
 		{
 			do
 			{
-				putc ('\n', stdout);
-				file_print ("./lines/6.digits.txt");
-				printf ("\n:");
+				printf ("\nEnter digits to convert\n\n:");
 				clear_line (input, SIZE);
 				empty_reading ();
 				scanf ("%s", input);
@@ -118,7 +112,7 @@ void converter (char* input)
 				choice = 6;
 				digits_output = digits_entered * 60 * 60;
 			}
-			FILE* rooms = fopen ("./lines/7.rooms.txt", "r");
+			FILE* rooms = fopen ("./demo-lines/converter.txt", "r");
 			go = 0;
 			do
 			{
