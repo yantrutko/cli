@@ -1,6 +1,5 @@
 #include "converter.h"
 #include "service/buffer.h"
-#include "service/file_print.h"
 #include "service/line.h"
 #include <stdio.h>
 
@@ -127,7 +126,6 @@ void converter (char* input)
 			}
 			while (!go && !(feof (rooms)));
 			fclose (rooms);
-			go = 0;
 			choice = 0;
 			list_choice = 0;
 			digits_entered = 0.0;

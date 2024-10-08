@@ -3,12 +3,11 @@
 #include "service/line.h"
 #include "service/randigit.h"
 #include <stdio.h>
-#include <time.h>
 
 void guess (void)
 {
 	char word[21] = { 0 };
-	char guess_word[21]= { 0 };
+	char guess_word[21] = { 0 };
 	char input = '\0';
 	int char_pointer = 0;
 	int index = 0;
