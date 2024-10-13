@@ -1,6 +1,8 @@
-CFLAGS = -Wall -pedantic -std=c23
+CFLAGS = -Wall -pedantic
 
 SOURCES := $(shell find -name '*.c')
 
-demo-cli:
-	clang $(CFLAGS) -o ../demo-cli $(SOURCES) && cp -r --update=none ./demo-lines ../ && ../demo-cli
+LINES = cp -r --update=none dlines ../
+
+democli:
+	clang $(CFLAGS) -o ../democli $(SOURCES) && $(LINES) && ../democli

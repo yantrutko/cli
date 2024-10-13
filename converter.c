@@ -111,7 +111,7 @@ void converter (char* input)
 				choice = 6;
 				digits_output = digits_entered * 60 * 60;
 			}
-			FILE* rooms = fopen ("./demo-lines/converter.txt", "r");
+			FILE* rooms = fopen ("./dlines/converter.txt", "r");
 			go = 0;
 			do
 			{

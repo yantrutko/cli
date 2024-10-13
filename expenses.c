@@ -1,6 +1,5 @@
 #include "expenses.h"
 #include "service/buffer.h"
-#include "service/file_print.h"
 #include "service/line.h"
 #include "service/symbol.h"
 #include <stdio.h>
@@ -13,68 +12,129 @@ void expenses (char* input)
 		EXIT, PRINT, APPEND, PERCENT, REMOVE, SIZE = 999
 	};
 	char remove_input[SIZE + 1] = { 0 };
+	double expenses_sum = 0.0;
 	double expenses = 0.0;
+	double percent = 0;
 	int go = 0;
-	int percent = 0;
+	int index = 0;
+	int exp_size = 0;
 	int c_pointer = 0;
 	int exp_menu = PRINT;
 	while (exp_menu)
 	{
 		if (exp_menu == PRINT)
 		{
+			exp_size = 0;
+			expenses_sum = 0.0;
+			FILE* fprint = fopen ("./dlines/expenses.txt", "r");
+			while (!feof (fprint))
+			{
+				clear_line (input, SIZE);
+				fgets (input, 998, fprint);
+				index = 0;
+				while (input[index] != ' ')
+				{
+					index = index + 1;
+				}
+				index = index + 1;
+				if (exp_size < index
+						&&
+						index < 13)
+				{
+					exp_size = index;
+				}
+				line_to_double (2, &expenses, input);
+				expenses_sum = expenses_sum + expenses;
+			}
+			fclose (fprint);
+			go = 0;
+			index = 0;
 			putc ('\n', stdout);
-			file_print ("./demo-lines/expenses.txt");
+			FILE* print = fopen ("./dlines/expenses.txt", "r");
+			while ((c_pointer = fgetc (print)) != EOF)
+			{
+				if (!go)
+				{
+					if (c_pointer == ' ')
+					{
+						go = 1;
+						while (index < exp_size)
+						{
+							putc (' ', stdout);
+							index = index + 1;
+						}
+						if (index > exp_size)
+						{
+							putc (' ', stdout);
+						}
+						index = 0;
+					}
+					else
+					{
+						putc (c_pointer, stdout);
+						index = index + 1;
+					}
+				}
+				else if (go)
+				{
+					if (c_pointer == '\n')
+					{
+						go = 0;
+					}
+					putc (c_pointer, stdout);
+				}
+			}
+			fclose (print);
+			printf ("\n=\n%g\n", expenses_sum);
 			exp_menu = SIZE;
 		}
 		else if (exp_menu == APPEND)
 		{
-			int index = 0;
+			int sign = 0;
 			int decimal = 0;
-			int input_size = 0;
-			FILE* append = fopen ("./demo-lines/expenses.txt", "a");
+			FILE* append = fopen ("./dlines/expenses.txt", "a");
 			printf ("\nentering format example: 13.50 lunch\n:");
 			clear_line (input, SIZE);
 			empty_reading ();
-			scanf ("%998s", input);
-			line_to_double (2, &expenses, input);
-			fprintf (append, "%g", expenses);
-			while (input[index] == ' ')
-			{
-				index = index + 1;
-			}
-			if
-			(
-				(is_digit (input[index]))
-				||
-				(
-					(input[index] == '-' || input[index] == '+')
-					&&
-					(input[index + 1] == '.' || input[index + 1] == ',')
-				)
-				||
-				(
-					(input[index] == '-' || input[index] == '+')
-					&&
-					(is_digit (input[index + 1]))
-				)
-			)
-			{
-				index = index + 1;
-			}
+			c_pointer = 0;
+			decimal = 0;
+			index = 0;
+			sign = 0;
 			go = 0;
-			while (input[index] && !go)
+			while ((c_pointer = getc (stdin)) == ' ');
+			ungetc (c_pointer, stdin);
+			while (!feof (stdin) && !go && index < 998)
 			{
-				if
-				(
-					(
-						!decimal
-						&&
-						(input[index] == '.' || input[index] == ',')
-					)
-					||
-					(is_digit (input[index]))
-				)
+				c_pointer = getc (stdin);
+				if (c_pointer == '+' || c_pointer == '-')
 				{
+					if (!sign)
+					{
+						input[index] = c_pointer;
+						index = index + 1;
+						sign = 1;
+					}
+					else
+					{
+						go = 1;
+					}
+				}
+				else if (c_pointer == '.' || c_pointer == ',')
+				{
+					if (!decimal)
+					{
+						input[index] = c_pointer;
+						index = index + 1;
+						decimal = 1;
+					}
+					else
+					{
+						go = 1;
+					}
+				}
+				else if (is_digit (c_pointer))
+				{
+					input[index] = c_pointer;
 					index = index + 1;
 				}
 				else
@@ -82,27 +142,18 @@ void expenses (char* input)
 					go = 1;
 				}
 			}
-			if (input[index] && input[index] != ' ')
+			line_to_double (2, &expenses, input);
+			fprintf (append, "%g", expenses);
+			if (c_pointer != ' ')
 			{
-				fputc (' ', append);
+				putc (' ', append);
 			}
-			while (input[index])
+			while (c_pointer != '\n')
 			{
-				fputc (input[index], append);
-				index = index + 1;
+				putc (c_pointer, append);
+				c_pointer = getc (stdin);
 			}
-			while (input[input_size])
-			{
-				input_size = input_size + 1;
-			}
-			if (input_size == 997)
-			{
-				while ((c_pointer = getchar ()) != '\n')
-				{
-					fputc (c_pointer, append);
-				}
-			}
-			fputc ('\n', append);
+			putc (c_pointer, append);
 			fclose (append);
 			exp_menu = SIZE;
 		}
@@ -112,7 +163,7 @@ void expenses (char* input)
 			percent = 0;
 			printf ("\nTo get 10 percent use format: [digits] [10%%]\n:");
 			empty_reading ();
-			scanf ("%lf %i", &expenses, &percent);
+			scanf ("%lf %lf", &expenses, &percent);
 			expenses = expenses * percent / 100;
 			printf ("\n%g\n", expenses);
 			exp_menu = SIZE;
@@ -122,13 +173,13 @@ void expenses (char* input)
 			int coincedens = 0;
 			int is_remove = 0;
 			int new_line = 0;
-			int exp_size = 0;
 			int r_index = 0;
 			int e_index = 0;
 			fpos_t position;
 			fpos_t next_position;
 			fpos_t start_position;
-			FILE* for_remove = fopen ("./demo-lines/expenses.txt", "r+");
+			exp_size = 0;
+			FILE* for_remove = fopen ("./dlines/expenses.txt", "r+");
 			fgetpos (for_remove, &start_position);
 			printf ("\nEnter some text from the selected line\n\n:");
 			clear_line (input, SIZE);
@@ -174,14 +225,14 @@ void expenses (char* input)
 					while (is_remove < 1 || is_remove > 2)
 					{
 						printf ("\n%s", remove_input);
-						printf ("\n1 | Next one\n2 | Delete\n:");
+						printf ("\n1 | Next one\n2 | Delete\n\n:");
 						empty_reading ();
 						scanf ("%i", &is_remove);
 					}
 					if (is_remove == 2)
 					{
 						fsetpos (for_remove, &start_position);
-						FILE* new_file = fopen ("./demo-lines/new_expenses.txt", "w");
+						FILE* new_file = fopen ("./dlines/new_expenses.txt", "w");
 						while (new_line > 1)
 						{
 							c_pointer = fgetc (for_remove);
@@ -207,8 +258,8 @@ void expenses (char* input)
 			fclose (for_remove);
 			if (is_remove == 2)
 			{
-				remove ("./demo-lines/expenses.txt");
-				rename ("./demo-lines/new_expenses.txt", "./demo-lines/expenses.txt");
+				remove ("./dlines/expenses.txt");
+				rename ("./dlines/new_expenses.txt", "./dlines/expenses.txt");
 			}
 			exp_menu = SIZE;
 		}
