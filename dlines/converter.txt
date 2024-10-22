@@ -1,7 +1,0 @@
-0%g C°  =  %g F°
-1%g F°  =  %g C°
-2%g cm  =  %g in
-3%g in  =  %g cm
-4%g h.  =  %g min.
-5%g min.  =  %g sec.
-6%g h.  =  %g sec.

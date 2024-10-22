@@ -1,9 +1,0 @@
-double 9.785444
-include 9.149766
-short 9.616314
-while 9.790774
-char 9.570216
-else 9.585576
-long 9.785124
-enum 9.327537
-integer 9.221344
