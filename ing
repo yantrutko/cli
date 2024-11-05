@@ -1,0 +1,10 @@
+
+doif 
+	(
+		someone or sometwo 
+		andif 
+		somethree and somefour
+	) 
+	{
+		instruction
+	}
